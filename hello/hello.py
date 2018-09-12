@@ -1,2 +1,2 @@
 print('hello, world')
-print('look, a moose!')
+print('look, a goat!')
