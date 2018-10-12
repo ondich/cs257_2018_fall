@@ -28,7 +28,7 @@ from config import password
 from config import database
 from config import user
 
-# Login to the database
+# Connect to the database
 try:
     connection = psycopg2.connect(database=database, user=user, password=password)
 except Exception as e:
