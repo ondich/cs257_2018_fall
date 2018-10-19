@@ -1,7 +1,10 @@
 Setting up the books/authors database
 CS257 Software Design
-Spring 2018
+Fall 2018
 Jeff Ondich
+
+How to set up my books/authors data so you can run my
+sample API and website.
 
 1. Create the tables in your PostgreSQL database
 
@@ -24,9 +27,15 @@ Jeff Ondich
         author_id integer
     );
 
-2. Load the data
+2. Turn my raw data (books-original.csv) into one CSV file per table.
 
-    cd tables
+    python3 books_and_authors_converter.py
+
+This generates books.csv, authors.csv, and books_authors.csv.
+    
+
+3. Load the data
+
     psql
       \copy authors from 'authors.csv' DELIMITER ',' CSV NULL AS 'NULL'
       \copy books from 'books.csv' DELIMITER ',' CSV NULL AS 'NULL'

@@ -241,6 +241,9 @@ def get_authors_for_book(book_id):
 
     return json.dumps(author_list)
 
+# I often include this route in my APIs to help me remember what routes
+# I have exposed. It's not the same as good documentation, but it's
+# a handy reminder for me while I'm developing the API.
 @app.route('/help')
 def help():
     rule_list = []
