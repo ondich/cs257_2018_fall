@@ -111,6 +111,21 @@ public class DaleksModel {
         return this.cells[row][column];
     }
 
+    /**
+     * Moves the runner by the specified distances in the row (y) and column (x)
+     * directions, and then calls moveDaleksToFollowRunner.
+     *
+     * @param rowChange the offset to be added to the runner's current row (thus,
+     *                  negative rowChange values will move the runner up the grid,
+     *                  while positive values will move the runner down the grid). If
+     *                  rowChange would cause the runner to leave the board, the runner
+     *                  is moved to either to the top row of the grid (if rowChange < 0)
+     *                  or the bottom row of the grid (if rowChange > 0).
+     * @param columnChange the offset to be added to the runner's current column.
+     *                     If columnChange would cause the runner to leave the board,
+     *                     the runner is moved either to the leftmost column (if columnChange < 0)
+     *                     or the rightmost column (if columnChange > 0).
+     */
     public void moveRunnerBy(int rowChange, int columnChange) {
         if (this.gameOver || this.dalekCount == 0) {
             return;
@@ -136,9 +151,14 @@ public class DaleksModel {
         this.cells[this.runnerRow][this.runnerColumn] = CellValue.EMPTY;
         this.runnerRow = newRow;
         this.runnerColumn = newColumn;
+        this.cells[this.runnerRow][this.runnerColumn] = CellValue.RUNNER;
         this.moveDaleksToFollowRunner();
     }
 
+    /**
+     * Moves the runner to a random location on the grid, and then calls
+     * moveDaleksToFollowRunner.
+     */
     public void teleportRunner() {
         if (this.gameOver || this.dalekCount == 0) {
             return;
@@ -152,10 +172,19 @@ public class DaleksModel {
         this.cells[this.runnerRow][this.runnerColumn] = CellValue.EMPTY;
         this.runnerRow = newRow;
         this.runnerColumn = newColumn;
+        this.cells[this.runnerRow][this.runnerColumn] = CellValue.RUNNER;
         this.moveDaleksToFollowRunner();
     }
 
-    // Assumes that the runner has been removed from this.cells.
+
+    /**
+     * Moves all the daleks to get as close to the runner's new position as
+     * possible using a one-square move (horizontally, vertically, or diagonally).
+     * If two objects end up on the same square as a result of their motion, both
+     * are removed from the grid and replaced by a scrap heap. Each dalek removed
+     * from the grid increases the score by 1. If the runner is removed from the
+     * grid, the game is over.
+     */
     private void moveDaleksToFollowRunner() {
         // Initialize a new game board
         int rowCount = this.cells.length;
@@ -170,13 +199,16 @@ public class DaleksModel {
         // Move the daleks on the old game board to their new positions on
         // the new game board. If a collision occurs, adjust score, check for
         // game-over, check for level-complete, etc.
+
+        // Note that because the runner is on the grid, the newRow and newColumn
+        // values for the Daleks will never leave the grid.
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
                 CellValue cellValue = this.cells[row][column];
                 if (cellValue != CellValue.EMPTY) {
                     int newRow = row;
                     int newColumn = column;
-                    if (cellValue == CellValue.DALEK){
+                    if (cellValue == CellValue.DALEK) {
                         if (newRow < this.runnerRow) {
                             newRow++;
                         } else if (newRow > this.runnerRow) {
@@ -190,17 +222,21 @@ public class DaleksModel {
                         }
                     }
 
-                    if (newCells[newRow][newColumn] == CellValue.EMPTY) {
+                    CellValue newCellValue = newCells[newRow][newColumn];
+                    if (newCellValue == CellValue.EMPTY) {
                         newCells[newRow][newColumn] = cellValue;
+
                     } else {
-                        // Collision! Update score and reduce the number of living daleks.
-                        if (newCells[newRow][newColumn] == CellValue.DALEK) {
-                            this.score++;
-                            this.dalekCount--;
-                        }
                         if (cellValue == CellValue.DALEK) {
                             this.score++;
                             this.dalekCount--;
+                        }
+                        if (newCellValue == CellValue.DALEK) {
+                            this.score++;
+                            this.dalekCount--;
+                        }
+                        if (cellValue == CellValue.RUNNER || newCellValue == CellValue.RUNNER) {
+                            this.gameOver = true;
                         }
 
                         newCells[newRow][newColumn] = CellValue.SCRAPHEAP;
@@ -209,17 +245,6 @@ public class DaleksModel {
             }
         }
 
-        if (newCells[this.runnerRow][this.runnerColumn] == CellValue.EMPTY) {
-            newCells[this.runnerRow][this.runnerColumn] = CellValue.RUNNER;
-        } else {
-            if (newCells[this.runnerRow][this.runnerColumn] == CellValue.DALEK) {
-                this.score++;
-                this.dalekCount--;
-            }
-            newCells[this.runnerRow][this.runnerColumn] = CellValue.SCRAPHEAP;
-            this.gameOver = true;
-        }
-
-        this.cells = newCells;
+       this.cells = newCells;
     }
 }
