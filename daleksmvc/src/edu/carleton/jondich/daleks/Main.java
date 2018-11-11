@@ -1,3 +1,10 @@
+/**
+ * Main.java
+ * Jeff Ondich, 2018
+ *
+ * The JavaFX Application class and main program for this MVC sample application
+ * based on the old game Daleks.
+ */
 package edu.carleton.jondich.daleks;
 
 import javafx.application.Application;

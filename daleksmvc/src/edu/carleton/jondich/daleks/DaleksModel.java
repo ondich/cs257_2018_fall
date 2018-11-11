@@ -1,3 +1,9 @@
+/**
+ * DaleksModel.java
+ * Jeff Ondich, 2018
+ *
+ * The Model for this MVC sample application based on the old game Daleks.
+ */
 package edu.carleton.jondich.daleks;
 
 import java.util.Random;

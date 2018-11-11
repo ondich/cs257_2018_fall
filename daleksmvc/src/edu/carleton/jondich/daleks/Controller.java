@@ -1,3 +1,9 @@
+/**
+ * Controller.java
+ * Jeff Ondich, 2018
+ *
+ * The View for this MVC sample application based on the old game Daleks.
+ */
 package edu.carleton.jondich.daleks;
 
 import javafx.fxml.FXML;
