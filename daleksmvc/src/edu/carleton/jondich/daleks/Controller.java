@@ -6,11 +6,12 @@
  */
 package edu.carleton.jondich.daleks;
 
-import javafx.fxml.FXML;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 public class Controller implements EventHandler<KeyEvent> {
     @FXML private Label scoreLabel;
@@ -22,6 +23,13 @@ public class Controller implements EventHandler<KeyEvent> {
     }
 
     public void initialize() {
+        this.daleksView.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                handleMouseEvent(mouseEvent);
+            }
+        });
+
         this.daleksModel = new DaleksModel(this.daleksView.getRowCount(), this.daleksView.getColumnCount());
         this.update();
     }
@@ -44,6 +52,10 @@ public class Controller implements EventHandler<KeyEvent> {
         } else {
             this.messageLabel.setText("Use the keys surrounding the S to run from the daleks.");
         }
+    }
+
+    public void handleMouseEvent(MouseEvent mouseEvent) {
+
     }
 
     @Override
